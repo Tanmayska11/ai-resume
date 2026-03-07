@@ -1,0 +1,499 @@
+/* 🔒 Prevent overflow issues globally */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+
+
+
+
+:root {
+  --primary: #1e88e5;
+  --border: #e6edf5;
+  --bg: #f7fafc;
+  --text-muted: #6b7a90;
+}
+
+body {
+  background: var(--bg);
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.page-container {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.page-header p {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 28px;
+}
+
+/* =========================
+   Job Description Section
+========================= */
+
+.jd-card {
+  display: grid;
+  grid-template-columns: 170px 1fr;
+  gap: 32px;
+  align-items: stretch;
+}
+
+
+
+/* LEFT: Profile */
+.profile-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* ✅ vertical center */
+  gap: 10px;
+}
+
+.profile-circle {
+  width: 110px;
+  height: 110px;
+  border: 2px dashed #b7d4fb;   /* stronger */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  color: var(--primary);
+  background: #f4f9ff;
+}
+
+.profile-side p {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* RIGHT SIDE */
+
+.jd-side {
+  display: flex;
+  align-items: center;
+  min-width: 0;          /* ✅ IMPORTANT */
+}
+
+
+/* INNER GROUP (KEY FIX) */
+.jd-input-wrapper {
+  width: 100%;
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: #eef5ff;        /* 👈 darker blue background */
+  border: 1px solid #c6dbff;  /* 👈 stronger border */
+}
+
+
+/* Title */
+.jd-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+/* Textarea */
+.jd-input-wrapper textarea {
+  width: 100%;
+  max-width: 100%;       /* ✅ */
+  min-height: 120px;     /* slightly reduced */
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #cfe2f9;
+  background: #ffffff;
+  font-size: 13.5px;     /* smaller */
+  line-height: 1.55;
+  resize: none;
+}
+
+.jd-input-wrapper textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.15);
+}
+
+/* Footer */
+.jd-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.attach {
+  font-size: 18px;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+/* Button */
+.jd-footer button {
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 14px rgba(21, 101, 192, 0.35);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+/* ✅ Hover → lighter blue */
+.jd-footer button:hover {
+  background: #61a3ea;   /* lighter than primary */
+}
+
+/* Optional micro-interaction */
+.jd-footer button:active {
+  transform: translateY(1px);
+}
+
+
+.attach-btn {
+  display: inline-flex;
+  align-items: center;       /* ✅ icon + text inline */
+  gap: 8px;
+  background: #e6f0ff;
+  border: 1px solid #c3dbff;
+  color: var(--primary);
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.attach-btn:hover {
+  background: #d6e8ff;
+}
+
+.attach-icon {
+  font-size: 12px;
+}
+
+/* Selected file preview */
+.file-preview {
+  margin-top: 10px;
+  padding: 6px 10px;
+  background: #ffffff;
+  border: 1px solid #cfe2f9;
+  border-radius: 8px;
+  font-size: 12.5px;
+  color: #0d161c;
+  display: inline-block;
+}
+
+
+.remove-file {
+  margin-left: 10px;
+  background: transparent;
+  border: none;
+  color: #e53935;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+textarea:disabled {
+  background: #f1f5f9;
+  cursor: not-allowed;
+}
+
+.jd-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.jd-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* spacing between Attachment & Clear */
+}
+
+/* Light danger button */
+.clear-btn.danger {
+  background: #fff5f5;
+  border: 1px solid #f3b4b4;
+  color: #c62828;
+  box-shadow: none;
+}
+
+.clear-btn.danger:hover {
+  background: #ffecec;
+}
+
+
+
+
+
+/* Analysis */
+
+.analysis-header {
+  margin-bottom: 18px;
+}
+
+.analysis-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0d161c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+.score-card {
+  background: #eef5ff;
+  border: 1px solid #c6dbff;
+  border-radius: 14px;
+  padding: 22px;
+  text-align: center;
+}
+
+.score-card h5 {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  letter-spacing: 0.05em;
+}
+
+.gauge {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 8px;
+}
+
+.gauge-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: #0d161c;
+}
+
+.score-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+/* Score help */
+.score-help {
+  position: relative;
+  margin-top: 10px;
+  font-size: 12.5px;
+}
+
+.help-trigger {
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* Tooltip box */
+.help-tooltip {
+  position: absolute;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 360px;
+  background: #ffffff;
+  border: 1px solid #dbe7f5;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: #0d161c;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 20;
+}
+
+/* Tooltip arrow */
+.help-tooltip::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent #ffffff transparent;
+}
+
+/* Show on hover */
+.score-help:hover .help-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(2px);
+}
+
+/* Tooltip text */
+.help-tooltip strong {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.help-tooltip ol {
+  padding-left: 18px;
+  margin: 6px 0;
+}
+
+.help-tooltip li {
+  margin-bottom: 3px;
+}
+
+.tooltip-foot {
+  margin-top: 8px;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* Force left alignment inside tooltip */
+.help-tooltip {
+  text-align: left;
+}
+
+/* Bold section heading */
+.tooltip-heading {
+  font-weight: 700;
+  margin-top: 8px;
+  margin-bottom: 4px;
+}
+
+
+
+.score-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+.details-card {
+  background:#eef5ff;
+  border: 1px solid #c6dbff;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.details-card section + section {
+  margin-top: 18px;
+}
+
+.details-card ul {
+  padding-left: 16px;
+}
+
+.details-card li {
+  margin-bottom: 6px;
+  font-size: 13.5px;
+}
+
+.summary-section p {
+  font-size: 13.5px;
+  color: #0d161c;
+}
+
+
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 32px;
+}
+
+.fade-in {
+  animation: fadeUp 0.45s ease forwards;
+  opacity: 0;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Gauge base ring */
+.gauge-track {
+  fill: none;
+  stroke-width: 10;
+  stroke: #e5edf5;
+}
+
+/* Gauge progress ring */
+.gauge-progress {
+  fill: none;
+  stroke-width: 10;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 0.6s ease, stroke 0.4s ease;
+}
+
+
+
+.details-card h4 {
+  margin-top: 16px;
+}
+
+.inline-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* Privacy */
+.privacy-box {
+  background: #eef6ff;
+  border: 1px solid #cfe4ff;
+  border-radius: 14px;
+  padding: 24px;
+}

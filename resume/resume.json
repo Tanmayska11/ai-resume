@@ -1,0 +1,272 @@
+{
+  "profile": {
+    "name": "Mr. Tanmay Santosh Khairnar",
+    "title": "Data Engineer | Analytics Engineer | Machine Learning Engineer (Projects)",
+    "location": "Munich, Germany",
+    "summary": "Data Engineer with a strong backend engineering foundation and close to three years of industry experience building scalable data and backend systems for analytics and reporting. Experienced in Python, SQL, ETL-style pipelines, data modeling, and production-grade APIs. Hands-on experience with machine learning, big data, and LLM-based systems through structured personal and academic projects. Currently pursuing a Master’s in Business Analytics & Data Science and seeking Data Engineer or Analytics Engineer roles, with ML engineering exposure through projects.",
+    "contact": {
+      "email": "tanmayska11@gmail.com",
+      "phone": "+49 15510700964",
+      "linkedin": "https://www.linkedin.com/in/tanmay-khairnar-72990314a",
+      "portfolio": "https://portfulio-14el.onrender.com/"
+    }
+  },
+
+  "skills": [
+    { "name": "Python", "level": 85, "category": "Programming" },
+    { "name": "SQL", "level": 80, "category": "Database" },
+    { "name": "PostgreSQL", "level": 75, "category": "Database" },
+
+    { "name": "ETL / ELT Pipelines", "level": 80, "category": "Data Engineering" },
+    { "name": "Apache Airflow", "level": 60, "category": "Data Engineering" },
+    { "name": "PySpark", "level": 65, "category": "Big Data" },
+    { "name": "Data Modeling (Relational)", "level": 70, "category": "Data Engineering" },
+    { "name": "Data Quality & Validation", "level": 70, "category": "Data Engineering" },
+    { "name": "Metrics & Reporting Layers", "level": 65, "category": "Analytics Engineering" },
+
+    { "name": "Pandas", "level": 80, "category": "Data Processing" },
+    { "name": "NumPy", "level": 75, "category": "Data Processing" },
+
+    { "name": "FastAPI / Django REST", "level": 75, "category": "Backend" },
+
+    { "name": "Docker", "level": 70, "category": "DevOps" },
+    { "name": "Git & GitHub Actions", "level": 75, "category": "DevOps" },
+
+    { "name": "AWS (EC2, ECR)", "level": 60, "category": "Cloud" },
+    { "name": "Snowflake", "level": 50, "category": "Cloud Data" },
+
+    { "name": "Machine Learning (Scikit-learn)", "level": 65, "category": "Machine Learning" },
+    { "name": "Feature Engineering", "level": 65, "category": "Machine Learning" },
+    { "name": "MLflow", "level": 65, "category": "ML Engineering" },
+    { "name": "LLMs & NLP", "level": 55, "category": "Machine Learning" },
+    { "name": "TensorFlow", "level": 50, "category": "Machine Learning" },
+
+    { "name": "Power BI (DAX)", "level": 80, "category": "Visualization" },
+    { "name": "Streamlit", "level": 70, "category": "Visualization (Projects)" }
+  ],
+
+  "experience": {
+    "professional_experience": [
+      {
+        "role": "Software Engineer (Backend / Data Engineering Focus)",
+        "company": "Refactor Academy Pvt. Ltd.",
+        "location": "Bengaluru, India",
+        "duration": "May 2021 - December 2023",
+        "context": "Production backend and data systems supporting analytics and reporting workloads",
+        "answer_priority": "professional_experience",
+        "responsibilities": [
+          "Improved P95 API response time by approximately 35% through SQL query optimization, analytics query tuning, targeted indexing, and response caching.",
+          "Reduced database load by around 40% by eliminating N+1 query patterns, optimizing joins, and redesigning analytics query paths and reporting layers.",
+          "Built and maintained 15+ Python-based REST APIs using FastAPI and Django to ingest, validate, and transform application data into analytics-ready datasets for reporting workloads supporting over 10,000 active users.",
+          "Enabled backend and data services supporting data ingestion pipelines to scale to nearly 2× peak traffic through async request handling, pagination strategies, and efficient connection management.",
+          "Improved production stability and data quality by introducing input validation, centralized error handling, structured logging, and automated tests, reducing recurring backend incidents by approximately 25%.",
+          "Containerized backend and data services using Docker, reducing deployment and rollback time by around 40% and improving environment consistency across development and production.",
+          "Worked in Agile sprints using Git-based workflows and CI/CD pipelines, delivering frequent releases with zero downtime."
+        ],
+        "tools_used": [
+          "Python",
+          "SQL (PostgreSQL)",
+          "FastAPI",
+          "Django",
+          "Docker",
+          "Git",
+          "CI/CD"
+        ]
+      }
+    ],
+
+    "experimental_experience": [
+      {
+        "area": "Big Data, Machine Learning & GenAI Systems",
+        "context": "Hands-on learning, prototypes, and experimentation",
+        "answer_priority": "projects_only",
+        "note": "All tools in this section were used in personal, academic, or experimental contexts, not in production company systems.",
+        "details": [
+          "Built batch-style ETL pipelines using PySpark to understand distributed data transformations and performance trade-offs.",
+          "Used MLflow to track experiments, compare metrics, and manage model versions.",
+          "Trained and evaluated machine learning models using Scikit-learn and TensorFlow on structured datasets.",
+          "Explored LLM-based solutions using Hugging Face and OpenAI APIs for text classification and question answering prototypes."
+        ],
+        "learning_outcomes": [
+          "Understanding distributed data processing trade-offs",
+          "Model lifecycle management and reproducibility",
+          "Limitations of LLMs without grounding"
+        ],
+        "tools_used": [
+          "PySpark",
+          "MLflow",
+          "Scikit-learn",
+          "TensorFlow",
+          "Hugging Face",
+          "OpenAI APIs"
+        ]
+      }
+    ]
+  },
+
+  "projects": [
+    {
+      "title": "AI-Powered Interactive Resume Platform",
+      "type": "Machine Learning + LLM Application",
+      "scope": "End-to-end individual project",
+      "description": "An interactive resume platform treating resume data as structured input, combining dashboards, a Retrieval-Augmented Generation (RAG) based chatbot, and a machine learning-driven career prediction engine.",
+      "tech_stack": ["Python", "Streamlit", "FAISS", "LLM APIs", "Scikit-learn", "PostgreSQL", "Docker"],
+      "outcomes": [
+        "Designed a centralized resume data model in PostgreSQL serving as a single source of truth across dashboards, ML models, and LLM applications.",
+        "Implemented a Retrieval-Augmented Generation (RAG) pipeline using FAISS to ground LLM responses and reduce hallucinated outputs.",
+        "Built and deployed an end-to-end ML inference pipeline for career path probability prediction using structured resume features.",
+        "Containerized the application using Docker to ensure reproducible local and cloud deployments."
+      ],
+
+      "links": { "github": "https://github.com/Tanmayska11/ai-resume-portfolio.git" },
+
+      "role_alignment": {
+        "primary": "Machine Learning Engineer",
+        "secondary": ["Data Scientist"]
+      }
+    },
+
+    {
+      "title": "Weather ETL Pipeline & Analytics System",
+      "type": "Data Engineering",
+      "scope": "End-to-end individual project",
+      "description": "Built an end-to-end ETL pipeline scheduled using Cron jobs to collect, clean, and store real-time weather data into PostgreSQL with automated analytics and alerting.",
+      "tech_stack": ["Python", "Cron (Scheduling)", "PostgreSQL", "Matplotlib", "Email Automation", "Power BI"],
+      "outcomes": [
+        "Implemented scheduled ETL workflows using Cron jobs to ingest and persist real-time weather data into PostgreSQL.",
+        "Designed data cleaning, validation, and transformation logic to generate analytics-ready datasets.",
+        "Built threshold-based email alerts to detect anomalous weather conditions.",
+        "Enabled scheduled reporting and visualization dashboards to support operational and analytical insights."
+      ],
+
+      "links": { "github": "https://github.com/Tanmayska11/Machine-Learning-MLflow.git" },
+
+      "role_alignment": {
+        "primary": "Data Engineer",
+        "secondary": ["Data Scientist"]
+      }
+    },
+
+    {
+      "title": "Wine Quality Prediction System",
+      "type": "Machine Learning Engineering",
+      "scope": "End-to-end individual project",
+      "description": "Developed and deployed a machine learning pipeline to predict wine quality with full experiment tracking and CI/CD-enabled deployment.",
+      "tech_stack": ["Scikit-learn", "MLflow", "Docker", "AWS", "GitHub Actions"],
+      "outcomes": [
+        "Developed an end-to-end machine learning pipeline covering data preprocessing, model training, evaluation, and deployment.",
+        "Tracked experiments, metrics, and model versions using MLflow for reproducibility.",
+        "Deployed containerized models on AWS using CI/CD pipelines."
+      ],
+
+      "links": { "github": "https://github.com/your-username/wine-quality-ml" },
+
+      "role_alignment": {
+        "primary": "Machine Learning Engineer",
+        "secondary": ["Data Scientist"]
+      }
+    },
+
+    {
+      "title": "Fake News Detection System",
+      "type": "Machine Learning + NLP",
+      "scope": "End-to-end individual project",
+      "description": "Built an NLP-based machine learning system to classify news articles as real or fake and deployed it as an interactive web application.",
+      "tech_stack": ["Python", "NLP", "Scikit-learn", "Streamlit"],
+      "outcomes": [
+        "Implemented an NLP pipeline including text preprocessing, feature extraction, and model evaluation.",
+        "Trained and evaluated binary classification models using standard ML metrics.",
+        "Deployed the model as an interactive web application for real-time predictions."
+      ],
+      
+      "links": { "github": "https://github.com/Tanmayska11/fakeNewsDetactor.git" },
+
+
+      "role_alignment": {
+        "primary": "Machine Learning Engineer",
+        "secondary": ["Data Scientist"]
+      }
+    }
+  ],
+
+  "education": [
+    {
+      "degree": "Master’s in Business Analytics & Data Science",
+      "institution": "EU Business School GmbH",
+      "location": "Munich, Germany",
+      "duration": "October 2024 – Present",
+      "courses": [
+        { "title": "Data Science & Analytics in Business", "grade": "A-" },
+        { "title": "Unlocking the Power of Big Data", "grade": "A-" },
+        { "title": "Tools for Success", "grade": "B" },
+        { "title": "Winning Strategy for Market Entry", "grade": "A" },
+        { "title": "Machine Learning & AI", "grade": "B+" },
+        { "title": "Data Visualization & Communication", "grade": "A-" },
+        { "title": "Developing Leadership Edge", "grade": "B" },
+        { "title": "Strategic Development for Business Success", "grade": "A-" },
+        { "title": "Business Intelligence", "grade": "A" },
+        { "title": "From Data to KPI", "grade": "A" }
+      ]
+    },
+    {
+      "degree": "Bachelor’s in Electrical Engineering",
+      "institution": "Savitribai Phule Pune University",
+      "location": "India",
+      "duration": "2018 – 2021"
+    }
+  ],
+
+  "certifications": [
+    {
+      "name": "Microsoft Certified: Power BI Data Analyst Associate",
+      "issuer": "Microsoft",
+      "credential_url": "https://learn.microsoft.com/en-gb/users/tanmaykhairnar-1358/credentials/257bae69f144631d"
+    },
+    {
+      "name": "IBM Data Science Professional Certificate",
+      "issuer": "IBM",
+      "credential_url": "https://courses.cognitiveclass.ai/certificates/f66d685977ae4a53816bab199ff0e69e"
+    }
+  ],
+
+  "extracurricular_activities": [
+    "Actively participate in football and table tennis, demonstrating teamwork, discipline, and consistency.",
+    "Support education for underprivileged children by donating books and clothes.",
+    "Contributed to charitable educational initiatives at Adhartirth Children Ashram, Trimbak, Pegalwadi, Maharashtra – 422213."
+  ],
+
+  "career_preferences": {
+    "target_roles": ["Data Engineer", "Analytics Engineer", "Machine Learning Engineer"],
+    "preferred_locations": ["Germany", "Europe", "Remote"],
+    "work_type": ["Full-time", "Hybrid", "Remote"]
+  },
+
+  "languages": [
+    { "language": "English", "proficiency": "Professional working proficiency" },
+    { "language": "German", "proficiency": "B1 Level" }
+  ],
+
+  "career_timeline": [
+  {
+    "label": "Bachelor’s in Electrical Engineering",
+    "start": "2018-07",
+    "end": "2021-06",
+    "type": "education"
+  },
+  {
+    "label": "Software Engineer (Refactor Academy)",
+    "start": "2021-05",
+    "end": "2023-12",
+    "type": "experience"
+  },
+  {
+    "label": "Master’s in Business Analytics & Data Science",
+    "start": "2024-10",
+    "end": "present",
+    "type": "education"
+  }
+]
+
+
+  
+}
