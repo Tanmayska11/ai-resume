@@ -1,0 +1,53 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: resume_postgres
+    environment:
+      POSTGRES_DB: resume
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ..
+      dockerfile: infra/backend.Dockerfile
+    container_name: resume_backend
+    env_file:
+      - ../.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  streamlit:
+    build:
+      context: ..
+      dockerfile: infra/streamlit.Dockerfile
+    container_name: resume_streamlit
+    env_file:
+      - ../.env
+    ports:
+      - "8501:8501"
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ../frontend
+    container_name: resume_frontend
+    env_file:
+      - ../frontend/.env.docker
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

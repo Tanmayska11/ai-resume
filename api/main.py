@@ -16,7 +16,7 @@ setup_logging()
 
 app = FastAPI(title="AI Resume Backend")
 
-FRONTEND_URL = os.getenv("NEXT_PUBLIC_FRONTEND_URL")
+FRONTEND_URL = os.getenv("NEXT_PUBLIC_FRONTEND_URL","*")
 
 
 # 🔥 REQUIRED for React

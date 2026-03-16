@@ -1,0 +1,21 @@
+# Python
+venv
+__pycache__
+*.pyc
+
+# Node
+node_modules
+frontend/node_modules
+.next
+frontend/.next
+
+# Git
+.git
+
+# Env
+.env
+frontend/.env.local
+
+# OS junk
+.DS_Store
+Thumbs.db
