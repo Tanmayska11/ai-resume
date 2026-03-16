@@ -31,3 +31,7 @@ Thumbs.db
 # embeddings / index
 *.faiss
 *.index
+
+# database backups
+*.sql
+*.dump
