@@ -25,7 +25,7 @@ def load_routers():
     from api.routers import chat, match, admin
 
     app.include_router(chat.router)
-    app.include_router(match.router)
+    #app.include_router(match.router)
     app.include_router(admin.router)
 
     print("✅ Routers loaded")
