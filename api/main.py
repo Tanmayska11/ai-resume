@@ -10,11 +10,17 @@ import os
 from dotenv import load_dotenv
 
 
+print("🚀 FastAPI app starting...")
+
 
 load_dotenv()
 setup_logging()
 
 app = FastAPI(title="AI Resume Backend")
+
+@app.on_event("startup")
+def startup_event():
+    print("✅ App startup event triggered")
 
 FRONTEND_URL = os.getenv("NEXT_PUBLIC_FRONTEND_URL","*")
 
