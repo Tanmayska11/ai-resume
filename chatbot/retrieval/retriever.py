@@ -39,13 +39,7 @@ class ResumeRetriever:
         self.index = None
         self.texts: List[str] = []
         self.metadatas: List[Dict] = []
-        self.embedder = None
-        if self.embedder is None:
-            print("🔥 Loading embedder...")
-            self.embedder = Embedder()
-
-
-
+        self.embedder = Embedder()
 
     # ----------------------------
     # Lazy load index
