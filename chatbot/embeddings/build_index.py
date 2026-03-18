@@ -1,5 +1,3 @@
-# chatbot/embeddings/build_index.py
-
 """
 Build and persist FAISS index for chatbot retrieval.
 
@@ -13,23 +11,18 @@ Pipeline:
 
 import os
 import json
-import faiss
 import pickle
 from pathlib import Path
 from typing import List, Dict
 import numpy as np
+import logging
+
 from chatbot.knowledge.resume_builder import build_resume_knowledge_base
 from chatbot.knowledge.github_ingestor import fetch_github_knowledge
 from chatbot.embeddings.embedder import Embedder
-import logging
-
-
-
 
 logging.basicConfig(level=logging.INFO)
-
 logger = logging.getLogger(__name__)
-
 
 # ==========================
 # CONFIG
@@ -49,26 +42,14 @@ EMBEDDING_DIM = 384  # all-MiniLM-L6-v2
 # ==========================
 
 def _build_documents(user_id: str) -> List[Dict]:
-    """
-    Build embeddable documents from resume + GitHub.
-    """
-
     documents: List[Dict] = []
 
-    # ==========================
-    # RESUME DOCUMENTS
-    # ==========================
     resume_chunks = build_resume_knowledge_base(user_id)
-
     for i, chunk in enumerate(resume_chunks):
         chunk["metadata"]["doc_id"] = f"resume_{i}"
         documents.append(chunk)
 
-    # ==========================
-    # GITHUB DOCUMENTS
-    # ==========================
     github_chunks = fetch_github_knowledge(user_id)
-
     for i, text in enumerate(github_chunks):
         documents.append({
             "text": text,
@@ -82,15 +63,9 @@ def _build_documents(user_id: str) -> List[Dict]:
     return documents
 
 
-
-
-
 # ==========================
 # PUBLIC ENTRY POINT
 # ==========================
-
-
-
 
 def build_faiss_index(user_id: str) -> None:
     """
@@ -115,6 +90,9 @@ def build_faiss_index(user_id: str) -> None:
 
     logger.info("🔹 Creating FAISS index...")
 
+    # 🔥 LAZY IMPORT (CRITICAL FIX)
+    import faiss
+
     if vectors.shape[0] == 0:
         raise RuntimeError("No vectors generated for FAISS index.")
 
@@ -123,7 +101,6 @@ def build_faiss_index(user_id: str) -> None:
     index.add(vectors)
 
     logger.info(f"🔹 FAISS index size: {index.ntotal}")
-
 
     logger.info("🔹 Persisting index and metadata...")
     faiss.write_index(index, str(FAISS_INDEX_PATH))
@@ -150,9 +127,6 @@ def build_faiss_index(user_id: str) -> None:
 # ==========================
 
 if __name__ == "__main__":
-    """
-    Manual rebuild command.
-    """
     USER_ID = os.getenv(
         "RESUME_USER_ID",
         "6593eba4-0118-4e49-ba9c-c2b6a9e879cf"

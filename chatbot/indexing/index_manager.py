@@ -1,7 +1,5 @@
 import threading
 
-from chatbot.embeddings.build_index import build_faiss_index
-
 USER_ID = "6593eba4-0118-4e49-ba9c-c2b6a9e879cf"
 
 
@@ -17,6 +15,9 @@ class IndexManager:
         with cls._lock:
             cls._is_rebuilding = True
             try:
+                # 🔥 LAZY IMPORT (CRITICAL FIX)
+                from chatbot.embeddings.build_index import build_faiss_index
+
                 build_faiss_index(USER_ID)
                 cls._invalidate_retriever()
             finally:
