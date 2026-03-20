@@ -31,8 +31,8 @@ INDEX_DIR.mkdir(parents=True, exist_ok=True)
 FAISS_INDEX_PATH = INDEX_DIR / "resume_faiss.index"
 METADATA_PATH = INDEX_DIR / "metadata.pkl"
 
-EMBEDDING_DIM = 384
-
+#EMBEDDING_DIM = 384
+EMBEDDING_DIM = 1536
 
 # ==========================
 # INTERNAL HELPERS
