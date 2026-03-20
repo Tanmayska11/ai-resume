@@ -11,10 +11,29 @@ Responsibilities:
 
 from typing import List, Dict, Any
 import numpy as np
-from sentence_transformers import SentenceTransformer
-
 
 DEFAULT_MODEL_NAME = "all-MiniLM-L6-v2"
+
+
+# 🔥 Global cache (IMPORTANT)
+_model = None
+
+
+def _get_model(model_name: str):
+    """
+    Lazy load SentenceTransformer model.
+    """
+    global _model
+
+    if _model is None:
+        print("⚡ Loading embedding model...")
+
+        # 🔥 lazy import
+        from sentence_transformers import SentenceTransformer
+
+        _model = SentenceTransformer(model_name)
+
+    return _model
 
 
 class Embedder:
@@ -24,25 +43,10 @@ class Embedder:
 
     def __init__(self, model_name: str = DEFAULT_MODEL_NAME):
         self.model_name = model_name
-        self.model = SentenceTransformer(model_name)
 
     def embed(self, documents: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
         Embed text documents into vectors.
-
-        Parameters
-        ----------
-        documents : List[Dict]
-            Each document must contain:
-              - "text": str
-              - "metadata": dict (optional)
-
-        Returns
-        -------
-        Dict containing:
-          - vectors   : np.ndarray (float32)
-          - texts     : List[str]
-          - metadatas : List[dict]
         """
 
         if not documents:
@@ -55,7 +59,10 @@ class Embedder:
         texts = [doc["text"] for doc in documents]
         metadatas = [doc.get("metadata", {}) for doc in documents]
 
-        vectors = self.model.encode(
+        # 🔥 model loads only here
+        model = _get_model(self.model_name)
+
+        vectors = model.encode(
             texts,
             normalize_embeddings=True,
             show_progress_bar=False,

@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime
 from chatbot.indexing.index_manager import IndexManager
 from chatbot.runtime_config import config
-
+from psycopg2.extras import Json
 
 
 
@@ -129,6 +129,22 @@ def validate_and_cast(value, column_type, nullable, column_name):
         if column_type in ["timestamp without time zone", "timestamp with time zone"]:
             return datetime.fromisoformat(str(value))
 
+        
+
+        if "ARRAY" in column_type.upper() or column_type.endswith("[]"):
+            if isinstance(value, str):
+                value = [v.strip() for v in value.split(",") if v.strip()]
+
+            if isinstance(value, list):
+                # Convert to PostgreSQL array literal
+                return "{" + ",".join([f'"{v}"' for v in value]) + "}"
+
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid array format for column '{column_name}'"
+            )
+
+            
         # text, varchar, etc
         return value
 
@@ -297,7 +313,17 @@ def update_group_data(group_name: str, payload: dict = Body(...)):
                         col
                     )
 
-                    set_clause_parts.append(f"{col} = %s")
+                    # 🔥 ADD THIS BLOCK HERE
+                    print("COLUMN:", col)
+                    print("TYPE:", column_meta[col]["data_type"])
+                    print("RAW VALUE:", record[col])
+                    print("VALIDATED VALUE:", validated_value)
+                    print("----")
+
+                    if column_meta[col]["data_type"].endswith("[]"):
+                        set_clause_parts.append(f"{col} = %s")
+                    else:
+                        set_clause_parts.append(f"{col} = %s")
                     values.append(validated_value)
 
                 where_clause = " AND ".join(
@@ -311,6 +337,7 @@ def update_group_data(group_name: str, payload: dict = Body(...)):
                     SET {", ".join(set_clause_parts)}
                     WHERE {where_clause}
                 """
+                print("FINAL VALUES SENT TO DB:", values)
                 cur.execute(query, values)
 
         conn.commit()

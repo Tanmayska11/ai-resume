@@ -12,24 +12,14 @@ Pipeline:
 """
 
 import os
-import json
 import faiss
 import pickle
 from pathlib import Path
 from typing import List, Dict
-import numpy as np
-from chatbot.knowledge.resume_builder import build_resume_knowledge_base
-from chatbot.knowledge.github_ingestor import fetch_github_knowledge
-from chatbot.embeddings.embedder import Embedder
 import logging
 
-
-
-
 logging.basicConfig(level=logging.INFO)
-
 logger = logging.getLogger(__name__)
-
 
 # ==========================
 # CONFIG
@@ -41,7 +31,7 @@ INDEX_DIR.mkdir(parents=True, exist_ok=True)
 FAISS_INDEX_PATH = INDEX_DIR / "resume_faiss.index"
 METADATA_PATH = INDEX_DIR / "metadata.pkl"
 
-EMBEDDING_DIM = 384  # all-MiniLM-L6-v2
+EMBEDDING_DIM = 384
 
 
 # ==========================
@@ -51,24 +41,23 @@ EMBEDDING_DIM = 384  # all-MiniLM-L6-v2
 def _build_documents(user_id: str) -> List[Dict]:
     """
     Build embeddable documents from resume + GitHub.
+    Lazy import to avoid startup delay.
     """
+
+    # 🔥 moved imports here (IMPORTANT)
+    from chatbot.knowledge.resume_builder import build_resume_knowledge_base
+    from chatbot.knowledge.github_ingestor import fetch_github_knowledge
 
     documents: List[Dict] = []
 
-    # ==========================
-    # RESUME DOCUMENTS
-    # ==========================
+    # Resume
     resume_chunks = build_resume_knowledge_base(user_id)
-
     for i, chunk in enumerate(resume_chunks):
         chunk["metadata"]["doc_id"] = f"resume_{i}"
         documents.append(chunk)
 
-    # ==========================
-    # GITHUB DOCUMENTS
-    # ==========================
+    # GitHub
     github_chunks = fetch_github_knowledge(user_id)
-
     for i, text in enumerate(github_chunks):
         documents.append({
             "text": text,
@@ -82,15 +71,9 @@ def _build_documents(user_id: str) -> List[Dict]:
     return documents
 
 
-
-
-
 # ==========================
 # PUBLIC ENTRY POINT
 # ==========================
-
-
-
 
 def build_faiss_index(user_id: str) -> None:
     """
@@ -105,6 +88,9 @@ def build_faiss_index(user_id: str) -> None:
 
     logger.info(f"🔹 Total documents: {len(documents)}")
 
+    # 🔥 lazy import (CRITICAL)
+    from chatbot.embeddings.embedder import Embedder
+
     logger.info("🔹 Embedding documents...")
     embedder = Embedder()
     embedded = embedder.embed(documents)
@@ -113,19 +99,17 @@ def build_faiss_index(user_id: str) -> None:
     metadatas = embedded["metadatas"]
     texts = embedded["texts"]
 
-    logger.info("🔹 Creating FAISS index...")
-
     if vectors.shape[0] == 0:
-        raise RuntimeError("No vectors generated for FAISS index.")
+        raise RuntimeError("No vectors generated.")
 
+    logger.info("🔹 Creating FAISS index...")
     faiss.normalize_L2(vectors)
     index = faiss.IndexFlatIP(EMBEDDING_DIM)
     index.add(vectors)
 
-    logger.info(f"🔹 FAISS index size: {index.ntotal}")
+    logger.info(f"🔹 Index size: {index.ntotal}")
 
-
-    logger.info("🔹 Persisting index and metadata...")
+    logger.info("🔹 Saving index...")
     faiss.write_index(index, str(FAISS_INDEX_PATH))
 
     with open(METADATA_PATH, "wb") as f:
@@ -141,18 +125,13 @@ def build_faiss_index(user_id: str) -> None:
         )
 
     logger.info("✅ FAISS index built successfully.")
-    logger.info(f"📁 Index: {FAISS_INDEX_PATH}")
-    logger.info(f"📁 Metadata: {METADATA_PATH}")
 
 
 # ==========================
-# CLI ENTRY
+# CLI
 # ==========================
 
 if __name__ == "__main__":
-    """
-    Manual rebuild command.
-    """
     USER_ID = os.getenv(
         "RESUME_USER_ID",
         "6593eba4-0118-4e49-ba9c-c2b6a9e879cf"

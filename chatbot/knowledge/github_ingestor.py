@@ -1,29 +1,17 @@
-# chatbot/knowledge/github_ingestor.py
-
 """
 Fetch and normalize GitHub README files
 for chatbot grounding.
-
-Source of truth:
-- Repo URLs come from PostgreSQL
-- Content is treated as READ-ONLY external knowledge
 """
 
 import requests
 from typing import List, Dict
 from urllib.parse import urlparse
 
-from db.db import get_db_conn
-
-
 GITHUB_RAW_BASE = "https://raw.githubusercontent.com"
 REQUEST_TIMEOUT = 10
 
 
 def _parse_repo_owner_and_name(repo_url: str) -> tuple[str, str] | None:
-    """
-    Extract owner and repo name from GitHub URL.
-    """
     try:
         parsed = urlparse(repo_url)
         parts = parsed.path.strip("/").split("/")
@@ -33,18 +21,18 @@ def _parse_repo_owner_and_name(repo_url: str) -> tuple[str, str] | None:
 
 
 def _fetch_readme(owner: str, repo: str) -> str | None:
-    """
-    Fetch README.md from common branches and filenames.
-    """
-
     branches = ["main", "master"]
     filenames = ["README.md", "Readme.md", "readme.md"]
+
+    headers = {
+        "User-Agent": "resume-chatbot/1.0"
+    }
 
     for branch in branches:
         for filename in filenames:
             url = f"{GITHUB_RAW_BASE}/{owner}/{repo}/{branch}/{filename}"
             try:
-                resp = requests.get(url, timeout=REQUEST_TIMEOUT)
+                resp = requests.get(url, timeout=REQUEST_TIMEOUT, headers=headers)
                 if resp.status_code == 200 and resp.text.strip():
                     return resp.text.strip()
             except requests.RequestException:
@@ -55,8 +43,11 @@ def _fetch_readme(owner: str, repo: str) -> str | None:
 
 def _fetch_project_repos(user_id: str) -> List[Dict]:
     """
-    Fetch project_id, title, and repo URL from DB.
+    Lazy DB access (IMPORTANT)
     """
+
+    # 🔥 lazy import
+    from db.db import get_db_conn
 
     sql = """
         SELECT
@@ -102,8 +93,7 @@ def fetch_github_knowledge(user_id: str) -> List[str]:
         if not readme:
             continue
 
-        # --- truncate excessively long READMEs (token safety)
-        max_chars = 6_000
+        max_chars = 6000
         if len(readme) > max_chars:
             readme = readme[:max_chars] + "\n\n[TRUNCATED]"
 

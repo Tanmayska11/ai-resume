@@ -1,40 +1,46 @@
 import os
-from chatbot.retrieval.retriever import ResumeRetriever
-from chatbot.llm.client import LLMClient
 from chatbot.runtime_config import config
 
 
 class ResumeChatbotService:
     """
     Orchestrates retrieval + answer generation for the resume chatbot.
-
-    Principles:
-    - Section-agnostic
-    - Metadata-driven
-    - Deterministic formatting (mock mode)
     """
-
 
     _instance_retriever = None
 
-
-
     def __init__(self):
         self._retriever = None
-        self.llm = None
+        self._llm = None
 
     # ----------------------------
     # Lazy-loaded retriever
     # ----------------------------
     @property
-    def retriever(self) -> ResumeRetriever:
+    def retriever(self):
         if ResumeChatbotService._instance_retriever is None:
+            # 🔥 lazy import
+            from chatbot.retrieval.retriever import ResumeRetriever
+
             ResumeChatbotService._instance_retriever = ResumeRetriever()
+
         return ResumeChatbotService._instance_retriever
 
+    # ----------------------------
+    # Lazy-loaded LLM
+    # ----------------------------
+    def _get_llm(self):
+        if self._llm is None:
+            # 🔥 lazy import
+            from chatbot.llm.client import LLMClient
 
-    
+            self._llm = LLMClient()
 
+        return self._llm
+
+    # ----------------------------
+    # Cache invalidation
+    # ----------------------------
     @classmethod
     def invalidate(cls):
         cls._instance_retriever = None
@@ -46,7 +52,6 @@ class ResumeChatbotService:
         if not question or not question.strip():
             return {
                 "answer": "Please ask a question about my experience, projects, or skills.",
-                
             }
 
         results = self.retriever.retrieve(question)
@@ -54,89 +59,59 @@ class ResumeChatbotService:
         if not results:
             return {
                 "answer": "That information is not mentioned in my resume or projects.",
-                
             }
 
-        # ===========================
-        # MOCK MODE (DETERMINISTIC)
-        # ===========================
         mode = config.llm_mode
 
+        # ===========================
+        # MOCK MODE
+        # ===========================
         if mode == "mock":
             answer_text = self._format_answer(results)
 
         # ===========================
-        # LIVE MODE (LLM)
+        # LIVE MODE
         # ===========================
         else:
-            if self.llm is None:
-                self.llm = LLMClient()
+            llm = self._get_llm()
 
             context = "\n\n".join(r["text"] for r in results)
 
-            answer_text = self.llm.generate_answer(
+            answer_text = llm.generate_answer(
                 context=context,
                 question=question,
             )
 
-        
-
         return {
             "answer": answer_text,
-            
         }
 
     # =====================================================
-    # FORMATTERS (SECTION-AGNOSTIC)
+    # FORMATTERS (UNCHANGED LOGIC)
     # =====================================================
 
     def _format_answer(self, results: list[dict]) -> str:
-        """
-        Decide formatting strategy purely based on metadata.
-        No section hardcoding. Order-independent.
-        """
 
-        # ============================
-        # EXTRACURRICULAR ACTIVITIES
-        # ============================
         if all(r.get("section") == "extracurricular_activities" for r in results):
             return self._format_extracurriculars(results)
 
-
-
-        # ============================
-        # LANGUAGES → SIMPLE BULLETS
-        # ============================
         if all(r.get("section") == "languages" for r in results):
             return self._format_languages(results)
 
-
-
-        # ============================
-        # SKILLS (CATEGORY GROUPED)
-        # ============================
         if all(r.get("section") == "skills" for r in results):
             return self._format_skills(results)
 
-        # If any role_id exists → grouped formatter (experience, projects,education)
         if any(
             r.get("role_id") or
             r.get("project_id") or
             r.get("education_id") or
-            r.get("certification_id") 
-            
+            r.get("certification_id")
             for r in results
         ):
             return self._format_grouped(results)
 
-
-
-        # Otherwise → simple bullet formatter (profile, skills, education, etc.)
         return self._format_simple(results)
 
-    # ----------------------------
-    # SIMPLE BULLETS
-    # ----------------------------
     def _format_simple(self, results: list[dict]) -> str:
         seen = set()
         bullets = []
@@ -154,14 +129,8 @@ class ResumeChatbotService:
                 bullets.append(f"- {text}")
 
         return "\n".join(bullets)
-    
-
 
     def _format_skills(self, results: list[dict]) -> str:
-        """
-        Group skills by category and render clean output.
-        """
-
         from collections import defaultdict
 
         grouped = defaultdict(list)
@@ -179,10 +148,9 @@ class ResumeChatbotService:
             blocks.append(f"- **{category}**")
             for skill in skills:
                 blocks.append(f"  - {skill}")
-            blocks.append("")  # spacing between categories
+            blocks.append("")
 
         return "\n".join(blocks).strip()
-    
 
     def _format_languages(self, results: list[dict]) -> str:
         seen = set()
@@ -198,7 +166,6 @@ class ResumeChatbotService:
             lines.append(f"- **{language.strip()}:** {proficiency.strip()}")
 
         return "\n".join(lines)
-    
 
     def _format_extracurriculars(self, results: list[dict]) -> str:
         seen = set()
@@ -213,19 +180,7 @@ class ResumeChatbotService:
 
         return "\n".join(lines)
 
-
-
-    
-
-
-    # ----------------------------
-    # GROUPED FORMATTER
-    # ----------------------------
     def _format_grouped(self, results: list[dict]) -> str:
-        """
-        Group experience/projects by role_id and render structured output.
-        """
-
         groups = {}
 
         for r in results:
@@ -240,45 +195,18 @@ class ResumeChatbotService:
         blocks = []
 
         for items in groups.values():
-
             section = items[0].get("section")
-            # section = next(
-            #     (r.get("section") for r in items if r.get("section")),
-            #     None
-            # )
 
-
-           
-
-
-            # Common
-            header = None
-            duration = None
-            location = None
-            context = None
-
-            # Experience
+            header = duration = location = context = None
             responsibilities = []
             learning_outcomes = []
-
-            # Projects
-            description = None
-            scope = None
-            role = None
+            description = scope = role = None
             outcomes = []
             links = []
-
-            # Shared
             tools = []
-
-            # Education
             courses = []
-
-            # Certifications
             issuer = None
             credentials = []
-
-
 
             for r in items:
                 field = r.get("field")
@@ -305,30 +233,19 @@ class ResumeChatbotService:
                 elif field == "learning_outcome":
                     learning_outcomes.append(text)
                 elif field == "tools":
-                    tools.extend(
-                        t.strip()
-                        for t in text.replace("Tools:", "").split(",")
-                        if t.strip()
-                    )
+                    tools.extend(t.strip() for t in text.replace("Tools:", "").split(",") if t.strip())
                 elif field == "link" and r.get("url"):
-                    if r.get("section") == "certifications":
+                    if section == "certifications":
                         credentials.append(r["url"])
                     else:
                         links.append(r["url"])
-                
                 elif field == "course":
                     courses.append(text)
-
                 elif field == "issuer":
                     issuer = text.replace("Issued by:", "").strip()
 
-
-
-            # ===== Header =====
             if header:
                 blocks.append(f"### {header}")
-
-            # ===== Meta =====
             if duration:
                 blocks.append(f"- **{duration}**")
             if location:
@@ -336,24 +253,18 @@ class ResumeChatbotService:
             if context:
                 blocks.append(f"- **{context}**")
 
-            # ===== EDUCATION OUTPUT =====
             if section == "education" and courses:
                 blocks.append("- **Relevant coursework:**")
                 for c in courses:
                     blocks.append(f"  - {c}")
 
-            # ===== CERTIFICATION OUTPUT =====
             if section == "certifications":
                 if issuer:
                     blocks.append(f"- **Issuer:** {issuer}")
-
                 for url in credentials:
                     blocks.append(f"- **🔗 Credential:** [{url}]({url})")
 
-            # ===== Professional vs Experimental =====
-            exp_type = next(
-                (r.get("experience_type") for r in items if r.get("experience_type")), None
-            )
+            exp_type = next((r.get("experience_type") for r in items if r.get("experience_type")), None)
 
             if exp_type == "professional":
                 if responsibilities:
@@ -366,39 +277,23 @@ class ResumeChatbotService:
                     for l in learning_outcomes:
                         blocks.append(f"  - {l}")
 
-            # ===== PROJECT OUTPUT =====
             if description:
                 blocks.append(f"- **Description:** {description}")
-
             if scope:
                 blocks.append(f"- **Scope:** {scope}")
-
             if role:
                 blocks.append(f"- **Role:** {role}")
-
             if outcomes:
                 blocks.append("- **Key outcomes:**")
                 for o in outcomes:
                     blocks.append(f"  - {o}")
 
-
-            # ===== Tools =====
             if tools:
                 blocks.append(f"- **Technologies:** {', '.join(tools)}")
 
-             # ===== Links =====
             for url in links:
                 blocks.append(f"- **🔗GitHub:** [{url}]({url})")
 
-                     
-
-
-            # ===== Project separator =====
             blocks.append("\n---\n")
 
-         
-
         return "\n".join(blocks).strip()
-
-
-  
