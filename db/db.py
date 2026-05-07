@@ -14,7 +14,8 @@ def get_db_conn():
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
-        sslmode="require"
+        sslmode="require",
+        options="-c search_path=public"
     )
     try:
         yield conn
