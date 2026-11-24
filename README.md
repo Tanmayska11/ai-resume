@@ -546,3 +546,15 @@ It is designed as both:
 1. A professional interactive resume
 2. A production-style AI application showcase
 
+---
+
+# Application Link
+
+```bash
+https://unstoppable-vtgb.onrender.com/
+```
+
+**Note:** This app is deployed on the free tier of [Render](https://render.com). 
+Due to inactivity spin-downs, the initial load may take up to a minute while the server starts up.
+
+
